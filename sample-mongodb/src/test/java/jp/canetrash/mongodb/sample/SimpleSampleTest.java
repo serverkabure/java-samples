@@ -23,7 +23,7 @@ public class SimpleSampleTest {
 	 * @throws Exception
 	 */
 	private DB getDB() throws Exception {
-		MongoURI uri = new MongoURI("mongodb://192.168.128.3 ");
+		MongoURI uri = new MongoURI("mongodb://192.168.0.76 ");
 		Mongo mongo = new Mongo(uri);
 		DB db = mongo.getDB("sengoku");
 		return db;
@@ -39,7 +39,7 @@ public class SimpleSampleTest {
 		DB db = getDB();
 		// コレクションがなければコレクションを新規作成
 		DBCollection col = db.getCollection("daimyou");
-		for (int i = 0; i < 1000; i++) {
+		for (int i = 0; i < 100; i++) {
 			col.insert(TestData.getRandomPersonalData());
 		}
 	}
@@ -88,7 +88,7 @@ public class SimpleSampleTest {
 			DBObject dbObject = cursor.next();
 			System.out.println(dbObject.get("name"));
 			System.out.println(dbObject.get("age"));
-			System.out.println((BasicDBList)dbObject.get("territory"));
+			System.out.println((BasicDBList) dbObject.get("territory"));
 		}
 	}
 
@@ -111,44 +111,101 @@ public class SimpleSampleTest {
 		while (cursor.hasNext()) {
 			System.out.println(cursor.next());
 		}
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	@Test
+	public void testSearchCondition2() throws Exception {
 		// age > 45
+		DB db = getDB();
+		BasicDBObject query = new BasicDBObject();
+		DBCollection col = db.getCollection("daimyou");
 		query = new BasicDBObject();
 		query.put("age", new BasicDBObject("$gt", 45));
+		DBCursor cursor = col.find(query);
 		System.out.println(query);
 		cursor = col.find(query);
 		while (cursor.hasNext()) {
 			System.out.println(cursor.next());
 		}
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	@Test
+	public void testSearchCondition3() throws Exception {
 		// weight in (40, 50, 60)
+		DB db = getDB();
+		BasicDBObject query = new BasicDBObject();
+		DBCollection col = db.getCollection("daimyou");
 		query = new BasicDBObject();
 		query.put("weight", new BasicDBObject("$in",
 				new Integer[] { 40, 50, 60 }));
+		DBCursor cursor = col.find(query);
 		System.out.println(query);
 		cursor = col.find(query);
 		while (cursor.hasNext()) {
 			System.out.println(cursor.next());
 		}
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	@Test
+	public void testSearchCondition4() throws Exception {
 		// 配列のマッチ。三河国、美濃国、出雲国をすべて要素にもつもの。
+		DB db = getDB();
+		BasicDBObject query = new BasicDBObject();
+		DBCollection col = db.getCollection("daimyou");
 		query = new BasicDBObject();
 		query.put("territory", new BasicDBObject("$all", new String[] { "三河国",
 				"美濃国", "出雲国" }));
 		System.out.println(query);
+		DBCursor cursor = col.find(query);
 		cursor = col.find(query);
 		while (cursor.hasNext()) {
 			System.out.println(cursor.next());
 		}
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	@Test
+	public void testSearchCondition5() throws Exception {
 		// territoryの要素の数が3つのもの
+		DB db = getDB();
+		BasicDBObject query = new BasicDBObject();
+		DBCollection col = db.getCollection("daimyou");
 		query = new BasicDBObject();
 		query.put("territory", new BasicDBObject("$size", 3));
+		DBCursor cursor = col.find(query);
 		System.out.println(query);
 		cursor = col.find(query);
 		while (cursor.hasNext()) {
 			System.out.println(cursor.next());
 		}
+	}
+
+	/**
+	 * @throws Exception
+	 */
+	@Test
+	public void testSearchCondition6() throws Exception {
 		// 名前でdistinct
+		DB db = getDB();
+		BasicDBObject query = new BasicDBObject();
+		DBCollection col = db.getCollection("daimyou");
 		List distinct = col.distinct("name");
 		for (Object obj : distinct) {
 			System.out.println(obj);
 		}
+		// count
+		long count = col.count();
+		System.out.println(count);
 	}
 }
