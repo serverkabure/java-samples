@@ -1,0 +1,34 @@
+<!DOCTYPE html> 
+<html> 
+    <head> 
+    <meta charset="UTF-8">
+    <title>jQuery Mobile Sample</title> 
+    <meta name="viewport" content="width=device-width, initial-scale=1,minimum-scale=1, maximum-scale=1"> 
+    <link rel="stylesheet" href="js/jquery/jquery.mobile-1.0b2.css" />
+    <script type="text/javascript" src="phonegap-1.0.0.js"></script>
+    <script src="js/jquery/jquery-1.5.2.min.js"></script>
+    <script>
+    $(document).bind("mobileinit", function() {
+      $.mobile.page.prototype.options.addBackBtn = true;
+    });
+    </script>
+    <script src="js/jquery/jquery.mobile-1.0b2.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+</head>
+<body>
+    <div data-role="page" id="index">
+        <div data-role="header">
+            <h1>Header</h1>
+        </div>
+        <div data-role="content">
+            <p>カメラで写真をとってUploadするサンプル</p>
+            <input id="camera" type="button" value="Camera!"/>
+            <p>アップロード</p>
+            <input id="upload" type="button" value="Upload!"/>
+        </div>
+        <div data-role="footer">
+            <h4>Footer</h4>
+        </div>
+    </div>
+</body>
+</html>
